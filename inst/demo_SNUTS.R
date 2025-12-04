@@ -1,5 +1,5 @@
 #devtools::load_all()
-library(adnuts)
+library(SparseNUTS)
 library(TMB)
 
 TMB::runExample('simple')

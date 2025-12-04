@@ -81,7 +81,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
             time.total=timing[1,]+timing[2,],
             ## iter=as.numeric(x@metadata$num_samples)+as.numeric(x@metadata$num_warmup),
             algorithm='NUTS')
-  adfit(x)
+  snutsfit(x)
 }
 
 #' Print matrix stats
@@ -495,7 +495,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
 #' @export
 plot_Q <- function(fit, Q=NULL){
   if(is.null(Q)){
-    if(!is.adfit(fit)) stop("fit is not a valid fitted object")
+    if(!is.snutsfit(fit)) stop("fit is not a valid fitted object")
     if(is.null(fit$mle$Q)) return(NULL)
     nn <- length(fit$par_names)
     if(is.null(fit$mle$Qinv)){

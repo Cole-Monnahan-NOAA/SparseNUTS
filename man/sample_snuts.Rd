@@ -136,7 +136,7 @@ runs.}
 \code{\link{StanEstimators::stan_sample}}.}
 }
 \value{
-A fitted MCMC object of class 'adfit'
+A fitted MCMC object of class 'snutsfit'
 }
 \description{
 NUTS sampling for TMB models using a sparse metric (BETA).

@@ -1,23 +1,24 @@
+## NOTE: This file was copied from adnuts on 2025-12-04
 
-#' Constructor for the "adfit" (A-D fit) class
+#' Constructor for the "snutsfit" (A-D fit) class
 #' @param x Fitted object from \code{\link{sample_admb}}
-#' @return An object of class "adfit"
+#' @return An object of class "snutsfit"
 #' @export
-adfit <- function(x){
+snutsfit <- function(x){
   stopifnot(is.list(x))
   if(is.null(x$samples)) stop("Samples missing from fit")
   if(is.null(x$algorithm)) stop("Algorithm missing from fit")
-  class(x) <- c('adfit', 'list')
+  class(x) <- c('snutsfit', 'list')
   x
 }
 
-#' Check object of class adfit
+#' Check object of class snutsfit
 #' @param x Returned list from \code{\link{sample_admb}}
 #' @export
-is.adfit <- function(x) inherits(x, "adfit")
+is.snutsfit <- function(x) inherits(x, "snutsfit")
 
 
-#' Convert object of class adfit to data.frame. Calls
+#' Convert object of class snutsfit to data.frame. Calls
 #' \code{\link{extract_samples}}
 #'
 #' @param x Fitted object from \code{\link{sample_rwm}}
@@ -31,34 +32,34 @@ is.adfit <- function(x) inherits(x, "adfit")
 #'   column for the log-posterior (lp__). Use this function
 #'   directly for finer control.
 #' @export
-as.data.frame.adfit <-
+as.data.frame.snutsfit <-
   function(x, row.names=NULL, optional=FALSE, ...)
     extract_samples(x)
 
-#' Plot object of class adfit
+#' Plot object of class snutsfit
 #' @param x Fitted object from \code{\link{sample_admb}}
 #' @param y Ignored
 #' @param ... Ignored
 #' @return Plot created
-#' @method plot adfit
+#' @method plot snutsfit
 #' @export
-plot.adfit <- function(x, y, ...) plot_marginals(x)
+plot.snutsfit <- function(x, y, ...) plot_marginals(x)
 
-#' Print summary of object of class adfit
+#' Print summary of object of class snutsfit
 #' @param object Fitted object from \code{\link{sample_admb}}
 #' @param ... Ignored
 #' @return Summary printed to screen
-#' @method summary adfit
+#' @method summary snutsfit
 #' @export
-summary.adfit <- function(object, ...) print(object)
+summary.snutsfit <- function(object, ...) print(object)
 
-#' Print summary of adfit object
+#' Print summary of snutsfit object
 #' @param x Fitted object from \code{\link{sample_admb}}
 #' @param ... Ignored
 #' @return Summary printed to console
-#' @method print adfit
+#' @method print snutsfit
 #' @export
-print.adfit <- function(x, ...){
+print.snutsfit <- function(x, ...){
   iter <- dim(x$samples)[1]
   chains <- dim(x$samples)[2]
   pars <- dim(x$samples)[3]-1
@@ -139,7 +140,7 @@ print.adfit <- function(x, ...){
 #' head(x)
 #' @export
 plot_uncertainties <- function(fit, log=TRUE, plot=TRUE){
-  stopifnot(is.adfit(fit))
+  stopifnot(is.snutsfit(fit))
   if(is.null(fit$mle$se))
     stop("MLE SEs not found so cannot plot them")
   sd.post <- apply(extract_samples(fit), 2, stats::sd)
@@ -196,7 +197,7 @@ plot_uncertainties <- function(fit, log=TRUE, plot=TRUE){
 plot_marginals <- function(fit, pars=NULL, mfrow=NULL,
                            add.mle=TRUE, add.monitor=TRUE,
                            breaks=30){
-  if(!is.adfit(fit)) stop("fit is not a valid object")
+  if(!is.snutsfit(fit)) stop("fit is not a valid object")
   if(!is.null(mfrow)) stopifnot(is.vector(mfrow) && length(mfrow)==2)
   stopifnot(add.mle %in% c(TRUE,FALSE))
   if(add.mle & is.null(fit$mle)) {
@@ -720,7 +721,7 @@ launch_shinyadmb <- function(fit){
 #' tail(apply(post, 2, median))
 extract_samples <- function(fit, inc_warmup=FALSE, inc_lp=FALSE,
                             as.list=FALSE, unbounded=FALSE){
-  if(!is.adfit(fit)) stop("fit is not a valid object")
+  if(!is.snutsfit(fit)) stop("fit is not a valid object")
   if(unbounded){
     x <- fit$samples_unbounded
     if(is.null(x))

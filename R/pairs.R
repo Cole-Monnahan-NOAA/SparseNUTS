@@ -1,16 +1,6 @@
 ## NOTE: This file was copied over from adnuts on 2025-12-04
 
 
-#' Deprecated function to make custom pairs plots for 'adfit'
-#' objects. Use S3 class method 'pairs' instead, and see
-#' \code{?pairs.adfit} for help.
-#' @param ... Passed on
-#' @export
-pairs_admb <- function(...){
-  .Deprecated('pairs', package='adnuts')
-  pairs.adfit(...)
-}
-
 #' Plot pairwise parameter posteriors and optionally the MLE points and
 #' confidence ellipses.
 #'
@@ -55,7 +45,7 @@ pairs_admb <- function(...){
 #'   the diagonal.
 #' @param ... Arguments to be passed to plot call in lower
 #'   triangular panels (scatterplots).
-#' @method pairs adfit
+#' @method pairs snutsfit
 #' @return Produces a plot, and returns nothing.
 #' @details This function is modified from the base \code{pairs}
 #'   code to work specifically with fits from the 'adnuts'
@@ -79,16 +69,15 @@ pairs_admb <- function(...){
 #' pairs(fit, pars=1:2, order='fast')
 #' pairs(fit, pars=1:2, order='mismatch')
 #'
-pairs.adfit <- function(x,
-                        pars=NULL,
-                       order=c('orig', 'slow', 'fast', 'mismatch', 'cor'),
-                       inc_warmup=FALSE,
-                       diag=c("trace","acf","hist"),
-                       acf.ylim=c(-1,1), ymult=NULL, axis.col=gray(.5),
-                       label.cex=.8, limits=NULL,
-                       add.mle=TRUE, add.monitor=TRUE, add.inits=FALSE,
-                       unbounded=FALSE, ...
-                       ){
+pairs.snutsfit <- function(x,
+                           pars=NULL,
+                           order=c('orig', 'slow', 'fast', 'mismatch', 'cor'),
+                           inc_warmup=FALSE,
+                           diag=c("trace","acf","hist"),
+                           acf.ylim=c(-1,1), ymult=NULL, axis.col=gray(.5),
+                           label.cex=.8, limits=NULL,
+                           add.mle=TRUE, add.monitor=TRUE, add.inits=FALSE,
+                           unbounded=FALSE, ...){
   fit <- x
   if(unbounded | !add.mle){
     mle <- NULL
