@@ -3,7 +3,7 @@
 \name{sample_inits}
 \alias{sample_inits}
 \title{Function to generate random initial values from a previous fit using
-adnuts}
+SparseNUTS}
 \usage{
 sample_inits(fit, chains)
 }
@@ -19,5 +19,5 @@ A list of lists which can be passed back into
 }
 \description{
 Function to generate random initial values from a previous fit using
-adnuts
+SparseNUTS
 }

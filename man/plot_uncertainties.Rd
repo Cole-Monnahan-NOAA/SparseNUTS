@@ -31,7 +31,7 @@ estimated from the .cor file. Large differences often
 indicate issues with one estimation method.
 }
 \examples{
-fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 x <- plot_uncertainties(fit, plot=FALSE)
 head(x)
 }

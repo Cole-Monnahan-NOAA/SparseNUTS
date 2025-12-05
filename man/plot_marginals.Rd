@@ -55,7 +55,7 @@ specifically:
 produces a nice readable file.
 }
 \examples{
-fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 plot_marginals(fit, pars=1:2)
 
 }

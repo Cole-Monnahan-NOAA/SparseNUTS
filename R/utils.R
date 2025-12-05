@@ -135,7 +135,7 @@ print.snutsfit <- function(x, ...){
 #' @return Invisibly returns data.frame with parameter name (row) and
 #'   estimated uncertainties for each method (columns).
 #' @examples
-#' fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+#' fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 #' x <- plot_uncertainties(fit, plot=FALSE)
 #' head(x)
 #' @export
@@ -191,7 +191,7 @@ plot_uncertainties <- function(fit, log=TRUE, plot=TRUE){
 #' \code{pdf('marginals.pdf', onefile=TRUE, width=7,height=5)}
 #' produces a nice readable file.
 #' @examples
-#' fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+#' fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 #' plot_marginals(fit, pars=1:2)
 #'
 plot_marginals <- function(fit, pars=NULL, mfrow=NULL,
@@ -289,12 +289,12 @@ plot_marginals <- function(fit, pars=NULL, mfrow=NULL,
 #' @importFrom rlang .data
 #' @export
 #' @examples
-#' fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+#' fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 #' plot_sampler_params(fit)
 plot_sampler_params <- function(fit, plot=TRUE){
   if(!requireNamespace("ggplot2", quietly=TRUE))
     stop("ggplot2 package not found")
-  sp <- adnuts::extract_sampler_params(fit, inc_warmup=TRUE)
+  sp <- SparseNUTS::extract_sampler_params(fit, inc_warmup=TRUE)
   sp.long <-
     data.frame(iteration=sp$iteration, chain=factor(sp$chain),
                value=c(sp$accept_stat__, log(sp$stepsize__),
@@ -309,86 +309,8 @@ plot_sampler_params <- function(fit, plot=TRUE){
   return(invisible(g))
 }
 
-#' Check that the file can be found
-#'
-#' @param model Model name without file extension
-#' @param path Path to model folder, defaults to working
-#'
-.check_model_path <- function(model, path){
-  stopifnot(is.character(path))
-  stopifnot(is.character(model))
-  if(!dir.exists(path))
-    stop('Folder ', path,
-         ' does not exist. Check argument \'path\' and working directory')
-  model2 <- .update_model(model)
-  ff <- file.path(path, model2)
-  if(!file.exists(ff))
-    stop('File ', model2, ' not found in specified folder. Check \'model\' argument')
-}
-
-#' Convert model name depending on system
-#'
-#' @param model Model name without file extension
-#' @return Updated model name to use with system call
-#'
-.update_model <- function(model){
-  stopifnot(is.character(model))
-  if (.Platform$OS.type=="windows"){
-    model2 <- paste0(model,".exe")
-  } else {
-    model2 <- paste0("./",model)
-  }
-  model2
-}
-
-#' Check that the  model is compiled with the right version
-#' of ADMB which is 12.0 or later
-#'
-#' @param model Model name without file extension
-#' @param path Path to model folder, defaults to working
-#'   directory. NULL value specifies working directory (default).
-#' @param min.version Minimum valid version (numeric). Defaults
-#'   to 12.0.
-#' @param warn Boolean whether to throw warnings or not
-#' @return Nothing, errors out if either model could not be run
-#'   or the version is incompatible. If compatible nothing
-#'   happens.
-#' @details Some functionality of packages \pkg{adnuts} is
-#'   imbedded in the ADMB source code so that when a model is
-#'   compiled it is contained in the model executable. If this
-#'   code does not exist adnuts will fail. The solution is to
-#'   update ADMB and recompile the model.
-.check_ADMB_version <- function(model, path=getwd(),
-                                min.version=12, warn=TRUE){
-  ## Check for file existing
-  .check_model_path(model=model, path=path)
-  wd <- getwd()
-  on.exit(setwd(wd))
-  setwd(path)
-
-  ## Run the model to get the version info
-  model2 <- .update_model(model)
-  test <- try(system(paste(model2, '-version'), intern=TRUE), silent=TRUE)
-  if (inherits(test,"try-error"))
-    stop(paste0("Could not detect version of ", model, ". Check executable and path"))
-  ## v <- as.numeric(gsub('ADMB-', '', strsplit(test[3], ' ')[[1]][1]))
-  v <- as.numeric(gsub('ADMB-', '', substr(strsplit(test[3], ' ')[[1]][1], 1,9)))
-  if(is.na(v) | !is.numeric(v)){
-    warning("Issue verifying ADMB version. Contact package mantainer")
-    return(0)
-  }
-  if(v < min.version)
-    stop(paste(model,"compiled with old version of ADMB. Version >12.0 required, found:\n", v,
-               "\nadnuts is incompatible with this version. Update ADMB and try again"))
-  if(v < 12.2 & warn){
-    warning("This version contains bugs in the NUTS code. Consider updating ADMB to version at least 12.2")
-  }
-  return(invisible(v))
-}
-
-
 #' Function to generate random initial values from a previous fit using
-#' adnuts
+#' SparseNUTS
 #'
 #' @param fit An outputted list from \code{\link{sample_admb}}
 #' @param chains The number of chains for the subsequent run, which
@@ -400,91 +322,6 @@ sample_inits <- function(fit, chains){
   post <- extract_samples(fit)
   ind <- sample(1:nrow(post), size=chains)
   lapply(ind, function(i) as.numeric(post[i,]))
-}
-
-#' Read in admodel.hes file
-#' @param path Path to folder containing the admodel.hes file
-#' @param full Whether to return just the Hessian (FALSE -
-#'   default) or the full
-#' @return The Hessian matrix
-.getADMBHessian <- function(path, full=FALSE){
-  ## This function reads in all of the information contained in the
-  ## admodel.hes file. Some of this is needed for relaxing the
-  ## covariance matrix, and others just need to be recorded and
-  ## rewritten to file so ADMB "sees" what it's expecting.
-  filename <- file.path(path, "admodel.hes")
-  if(!file.exists(filename))
-    stop(paste0("admodel.hes not found: ", filename))
-  f <- file(filename, "rb")
-  on.exit(close(f))
-  num.pars <- readBin(f, "integer", 1)
-  hes.vec <- readBin(f, "numeric", num.pars^2)
-  hes <- matrix(hes.vec, ncol=num.pars, nrow=num.pars)
-  hybrid_bounded_flag <- readBin(f, "integer", 1)
-  scale <- readBin(f, "numeric", num.pars)
-  if(full) return(list(num.pars=num.pars, hes=hes, hbf=hybrid_bounded_flag, scale=scale))
-  return(hes)
-}
-
-
-#' Check identifiability from model Hessian
-#'
-#' @param path Path to model folder, defaults to working directory
-#' @param model Model name without file extension
-#' @details Read in the admodel.hes file and check the eigenvalues to
-#'   determine which parameters are not identifiable and thus cause the
-#'   Hessian to be non-invertible. Use this to identify which parameters
-#'   are problematic. This function was converted from a version in the
-#'   \code{FishStatsUtils} package.
-#' @return Prints output of bad parameters and invisibly returns it.
-#' @export
-check_identifiable <- function(model, path=getwd()){
-  ## Check eigendecomposition
-  fit <- .read_mle_fit(model, path)
-  hes <- .getADMBHessian(path)
-  ev  <-  eigen(hes)
-  if (any(is.complex(ev$values))){
-    WhichBad <- which( abs(Im(ev$values)) > .Machine$double.eps);
-  } else {
-    WhichBad <- which( ev$values < sqrt(.Machine$double.eps) );
-  }
-  if(length(WhichBad)==0){
-    message( "All parameters are identifiable" )
-  } else {
-    ## Check for parameters
-    if(length(WhichBad==1)){
-      RowMax <- abs(ev$vectors[,WhichBad])
-    } else {
-      RowMax  <-  apply(ev$vectors[, WhichBad], MARGIN=1, FUN=function(vec){max(abs(vec))} )
-    }
-    bad <- data.frame(ParNum=1:nrow(hes), Param=fit$par.names,
-                      MLE=fit$est[1:nrow(hes)],
-                      Param_check=ifelse(RowMax>0.1, "Bad","OK"))
-    row.names(bad) <- NULL
-    bad <- bad[bad$Param_check=='Bad',]
-    print(bad)
-    return(invisible(bad))
-  }
-}
-
-
-## Read in PSV file
-.get_psv <- function(model){
-  if(!file.exists(paste0(model, '.psv'))){
-    ## Sometimes ADMB will shorten the name of the psv file for some
-    ## reason, so need to catch that here.
-    ff <- list.files()[grep(x=list.files(), pattern='psv')]
-    if(length(ff)==1){
-      warning(paste("No .psv file found, using", ff))
-      pars <- R2admb::read_psv(sub('.psv', '', x=ff))
-    } else {
-      stop(paste("No .psv file found -- did something go wrong??"))
-    }
-  } else {
-    ## If model file exists
-    pars <- R2admb::read_psv(model)
-  }
-  return(pars)
 }
 
 #' Update algorithm for mass matrix.
@@ -634,21 +471,21 @@ check_identifiable <- function(model, path=getwd()){
   message(paste0(x, sprintf("%.1f", time.total), ' seconds (Total)'))
 }
 
-## Convert adnuts fit (named list) into a \code{shinystan} object.
+## Convert SparseNUTS fit (named list) into a \code{shinystan} object.
 ##
 ## @details The shinystan packages provides several conversion functions
 ##   for objects of different types, such as stanfit classes (Stan ouput)
 ##   and simple arrays. For the latter, option NUTS information, such as
 ##   \code{sampler_params} can be passed. This function essentially extends
 ##   the functionality of \code{as.shinystan} to work specifically with
-##   fits from adnuts (TMB or ADMB). The user can thus explore their model
-##   with \code{launch_shinystan(.as.shinyadnuts(fit))} in the same way
+##   fits from SparseNUTS (TMB or RTMB). The user can thus explore their model
+##   with \code{launch_shinystan(.as.shinysnutsfit(fit))} in the same way
 ##   that Stan models are examined.
 ## @param fit Output list from  \code{sample_admb}.
 ## @seealso launch_shinyadmb
 ## @return An S4 object of class shinystan. Depending on the algorithm
 ##   used, this list will have slight differences.
-.as.shinyadnuts <- function(fit){
+.as.shinysnuts <- function(fit){
   if(fit$algorithm=="NUTS"){
     sso <- with(fit, shinystan::as.shinystan(samples, warmup=warmup, max_treedepth=max_treedepth,
              sampler_params=sampler_params, algorithm='NUTS', model_name=model))
@@ -667,17 +504,6 @@ check_identifiable <- function(model, path=getwd()){
 #' @param fit A named list returned by \code{sample_tmb}.
 #' @seealso \code{launch_shinyadmb}
 launch_shinytmb <- function(fit){
-  if(!requireNamespace('shinystan', quietly = TRUE))
-    stop("The shinystan package is required for this functionality")
-  shinystan::launch_shinystan(.as.shinyadnuts(fit))
-}
-
-#' Launch shinystan for an ADMB fit.
-#'
-#' @param fit A named list returned by \code{sample_admb}.
-#' @seealso \code{launch_shinytmb}
-#' @export
-launch_shinyadmb <- function(fit){
   if(!requireNamespace('shinystan', quietly = TRUE))
     stop("The shinystan package is required for this functionality")
   shinystan::launch_shinystan(.as.shinyadnuts(fit))
@@ -716,7 +542,7 @@ launch_shinyadmb <- function(fit){
 #' @export
 #' @examples
 #' ## A previously run fitted ADMB model
-#' fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+#' fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 #' post <- extract_samples(fit)
 #' tail(apply(post, 2, median))
 extract_samples <- function(fit, inc_warmup=FALSE, inc_lp=FALSE,
@@ -774,7 +600,7 @@ extract_samples <- function(fit, inc_warmup=FALSE, inc_lp=FALSE,
 #' @seealso \code{\link{launch_shinyadmb}}.
 #' @export
 #' @examples
-#' fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+#' fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 #' sp <- extract_sampler_params(fit, inc_warmup=TRUE)
 #' str(sp)
 #'

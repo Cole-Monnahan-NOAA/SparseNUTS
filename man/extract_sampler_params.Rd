@@ -31,7 +31,7 @@ user should not need to examine them, or preferably should via
 \code{\link{plot_sampler_params}} or  \code{\link{launch_shinyadmb}}.
 }
 \examples{
-fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 sp <- extract_sampler_params(fit, inc_warmup=TRUE)
 str(sp)
 
