@@ -3,14 +3,6 @@
 ## https://github.com/Cole-Monnahan-NOAA/adnuts/commit/33744b850b8ee0642b8c8095181ebb4b878e1495
 
 
-#' Deprecated version of sample_snuts
-#' @export
-sample_sparse_tmb <- function(...){
-  .Deprecated('sample_snuts', package='adnuts')
-  sample_snuts(...)
-}
-
-
 #' Extract posterior samples from a tmbfit object
 #' @param x A fitted tmbfit object
 #' @param invf The inverse function to decorrelate the parameters
@@ -241,9 +233,8 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
 #' Get a single initial value vector in untransformed model space
 #' @param init The initial value strategy
 #' @param obj2 The joint TMB model
-#' @param seed RNG seed
 #' @param inputs A list as returned by \code{.get_inputs}.
-.get_inits <- function(init, obj2, seed, inputs) {
+.get_inits <- function(init, obj2, inputs) {
   # only certain combinations of metrics and inputs can work
   metric <- inputs$metric
   if(metric=='stan' & init %in% c('random', 'random-t'))
@@ -251,7 +242,6 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
   if((is.null(inputs$Qinv | is.null(inputs$mle$est))) &
      init %in% c('random', 'random-t'))
     stop("Cannot use random inits b/c mode or Qinv does not exist, use a different init")
-  if(!is.null(seed)) set.seed(seed)
   # this will be the mode if skip_optimization=FALSE in .get_inputs
   lpb <- obj2$env$last.par.best
   if(inputs$laplace){
@@ -311,7 +301,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     fn2 <- function(x) fn(chd %*% x)
     gr2 <- function(x) {as.vector( gr(chd %*% x) %*% chd )}
     ## Now rotate back to "x" space using the new mass matrix M
-    x.cur <- as.numeric(chd.inv %*% y.cur)
+    x.cur <- lapply(y.cur, \(y) as.numeric(chd.inv %*% y))
     finv <- function(x){
       t(chd %*% x)
     }
@@ -325,7 +315,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     ## Now rotate back to "x" space using the new mass matrix M. M is a
     ## vector here. Note the big difference in efficiency without the
     ## matrix operations.
-    x.cur <- (1/chd) * y.cur
+    x.cur <- lapply(y.cur, \(y) as.numeric((1/chd) * y))
     finv <- function(x) chd*x
   } else if(metric=='unit' | metric=='stan') {
     ## unit metric, change nothing
@@ -365,7 +355,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     ## Now rotate back to "x" space using the new mass matrix M
     #  solve(t(chol(solve(M)))) ~~ IS EQUAL TO ~~ J%*%chol(M)%*%J
     # J%*%chol(J%*%prec%*%J) %*% J%*%x
-    x.cur <- as.numeric(J%*%chol(J%*%Q%*%J) %*% J%*%y.cur)
+    x.cur <- lapply(y.cur, \(y) as.numeric(J%*%chol(J%*%Q%*%J) %*% J%*%y))
     finv <- function(x){
       t(as.numeric(J%*%Matrix::solve(chd, Matrix::solve(chd, J%*%x, system="Lt"), system="Pt")))
     }
@@ -379,7 +369,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     # Drop all numerical zeros and convert to triangular storage
     L <- Matrix::tril(Matrix::drop0(L)) ## class(L) == "dtCMatrix"
     Lt <- Matrix::t(L) ## class(Lt) == "dtCMatrix"
-    x.cur <- as.vector(Matrix::t(L) %*% y.cur[perm])
+    x.cur <- lapply(y.cur, \(y) as.vector(Lt %*% y[perm]))
     fn2 <- function(y)  fn(Matrix::solve(Lt, y)[iperm])
     gr2 <- function(y){
       x <- Matrix::solve(Lt, y)[iperm]
@@ -445,10 +435,10 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
           # when doing timing need to add random components to
           # input, otherwise TMB may skip calculations and throw
           # off benchmarking
-          npars <- length(rdense$x.cur)
+          npars <- length(rdense$x.cur[[1]])
           bench <- microbenchmark::microbenchmark(
-            rdense$gr2(rdense$x.cur+rnorm(npars, sd=1e-10)),
-            rsparse$gr2(rsparse$x.cur+rnorm(npars, sd=1e-10)),
+            rdense$gr2(rdense$x.cur[[1]]+rnorm(npars, sd=1e-10)),
+            rsparse$gr2(rsparse$x.cur[[1]]+rnorm(npars, sd=1e-10)),
             times = 500
             )
           tdense <- summary(bench)$median[1]
@@ -550,11 +540,11 @@ benchmark_metrics <- function(obj, times=1000, metrics=NULL,
   }
   n <- length(obj$env$last.par.best)
   res <- lapply(metrics, function(metric) {
-    out <- adnuts::sample_snuts(obj, rotation_only = TRUE,
-                                     metric=metric, Q=Q, Qinv=M,
-                                     skip_optimization = TRUE)
+    out <- sample_snuts(obj, rotation_only = TRUE,
+                        metric=metric, Q=Q, Qinv=M,
+                        skip_optimization = TRUE)
     metric <- out$metric # in case auto
-    x0 <- out$x.cur
+    x0 <- out$x.cur[[1]]
     # make sure to add tiny random component during benchmarking to
     # avoid TMB tricks of skipping calcs
     time <- summary(microbenchmark::microbenchmark(out$gr2(x0+rnorm(n, sd=1e-10)),

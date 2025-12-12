@@ -18,18 +18,17 @@
 #'   "dense", "diag", "unit", "Stan", or "sparse-naive" can be
 #'   specified.
 #' @param init Either 'last.par.best' (default), 'random',
-#'   'random-t', or 'unif'. The former starts from the joint
+#'   'random-t', 'unif', or a list of vectors equal to the number of chains used.
+#'   The former starts from the joint
 #'   mode, while 'random' and 'random-t' draw from multivariate
 #'   normal or multivariate t with 2 degrees of freedom
 #'   distributions using the inverse joint precision matrix as a
 #'   covariance matrix. 'random-t' is provided to allow for more
 #'   dispersed initial values. 'unif' will draw U(-2,2) samples
-#'   for all parameters, similar ot Stan's default behavior. If
+#'   for all parameters, similar to Stan's default behavior. If
 #'   the joint NLL is undefined at the initial values then the
 #'   model will exit and return the initial vector for further
-#'   investigation by the user, if desired. Note that
-#'   \code{\link[StanEstimators]{stan_sample}} only allows for
-#'   the same init vector for all chains currently. If a seed is
+#'   investigation by the user, if desired. If a seed is
 #'   specified it will be set and thus the inits used will be
 #'   reproducible. The inits are also returned in the 'inits'
 #'   slot of the fitted object.
@@ -183,7 +182,6 @@ sample_snuts <-
       # defaults expected by stan_sample
       lower <- -Inf; upper <- Inf
     }
-    init <- match.arg(init)
     obj$env$beSilent()
     if(!is.null(model_name)){
       stopifnot(is.character(model_name))
@@ -226,8 +224,17 @@ sample_snuts <-
     if(!is.null(inputs$mle$est)) dummy <- obj2$fn(inputs$mle$est)
     # this is the initial value in the untransformed (original)
     # parameter space
-    yinits <- .get_inits(init=init, obj2=obj2,
-                        seed=seed, inputs=inputs)
+    if(!is.null(seed)) set.seed(seed)
+    if(is.list(init)){
+      # user passes their own list of vectors
+      if(length(init) != chains)
+        stop("Passed list of inits is not equal to number of chains")
+      yinits <- init
+    } else {
+      init <- match.arg(init)
+      yinits <- lapply(1:chains, \(x) .get_inits(init=init, obj2=obj2,
+                                                 inputs=inputs))
+    }
     # now can transform the parameter space via the metric selected
     rotation <- .rotate_posterior(metric=metric, fn=obj2$fn,
                                   gr=obj2$gr, Q=inputs$Q,
@@ -237,12 +244,13 @@ sample_snuts <-
     fsparse <- function(v) {dyn.load(mydll); -rotation$fn2(v)}
     gsparse <- function(v) -as.numeric(rotation$gr2(v))
     inits <- rotation$x.cur
+    tmp <- paste(unlist(lapply(inits, \(y) round(fsparse(y),2))), collapse=',')
     if(!is.null(inputs$mle$est)){
       nll0=round(-obj2$fn(inputs$mle$est),3)
-      message("log-posterior at inits=", round(fsparse(inits),3),
-              "; at conditional mode=",nll0)
+      message("log-posterior at inits=(", tmp,
+              "); at conditional mode=",nll0)
     } else {
-      message("log-posterior at inits=", round(fsparse(inits),3))
+      message("log-posterior at inits=(", tmp, ")")
     }
     globals2 <- list(obj2 = obj2, mydll=mydll, rotation=rotation)
     ## the user must pass data objects
