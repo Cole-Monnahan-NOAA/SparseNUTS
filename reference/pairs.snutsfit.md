@@ -1,5 +1,8 @@
 # Plot pairwise parameter posteriors and optionally the MLE points and confidence ellipses.
 
+Plot pairwise parameter posteriors and optionally the MLE points and
+confidence ellipses.
+
 ## Usage
 
 ``` r
@@ -78,32 +81,68 @@ pairs(
 
 - add.mle:
 
-  Boolean whether to add 95\\
+  Boolean whether to add 95% confidence ellipses
 
-  add.monitorBoolean whether to print effective sample
+- add.monitor:
 
-  add.initsBoolean whether to add the initial values to the plot
+  Boolean whether to print effective sample
 
-  unboundedWhether to use the bounded or unbounded version of the
-  parameters. size (ESS) and Rhat values on the diagonal.
+- add.inits:
 
-  ...Arguments to be passed to plot call in lower triangular panels
+  Boolean whether to add the initial values to the plot
+
+- unbounded:
+
+  Whether to use the bounded or unbounded version of the parameters.
+  size (ESS) and Rhat values on the diagonal.
+
+- ...:
+
+  Arguments to be passed to plot call in lower triangular panels
   (scatterplots).
 
-  fitA list as returned by `sample_nuts`.
+- fit:
 
-Produces a plot, and returns nothing. Plot pairwise parameter posteriors
-and optionally the MLE points and confidence ellipses. This function is
-modified from the base `pairs` code to work specifically with fits from
-the 'adnuts' package using either the NUTS or RWM MCMC algorithms. If an
-invertible Hessian was found (in `fit$mle`) then estimated covariances
-are available to compare and added automatically (red ellipses).
-Likewise, a "monitor" object from
-[`rstan::monitor`](https://mc-stan.org/rstan/reference/monitor.html) is
-attached as `fit$monitor` and provides effective sample sizes (ESS) and
-Rhat values. The ESS are used to potentially order the parameters via
-argument `order`, but also printed on the diagonal. fit \<-
-readRDS(system.file('examples', 'fit.RDS', package='adnuts')) pairs(fit)
-pairs(fit, pars=1:2) pairs(fit, pars=c(2,1)) pairs(fit, pars=c('b',
-'a')) pairs(fit, pars=1:2, order='slow') pairs(fit, pars=1:2,
-order='fast') pairs(fit, pars=1:2, order='mismatch') Cole Monnahan
+  A list as returned by `sample_nuts`.
+
+## Value
+
+Produces a plot, and returns nothing.
+
+## Details
+
+This function is modified from the base `pairs` code to work
+specifically with fits from the 'adnuts' package using either the NUTS
+or RWM MCMC algorithms. If an invertible Hessian was found (in
+`fit$mle`) then estimated covariances are available to compare and added
+automatically (red ellipses). Likewise, a "monitor" object from
+[`posterior::summarize_draws`](https://mc-stan.org/posterior/reference/draws_summary.html)
+is attached as `fit$monitor` and provides effective sample sizes (ESS)
+and Rhat values. The ESS are used to potentially order the parameters
+via argument `order`, but also printed on the diagonal.
+
+## Author
+
+Cole Monnahan
+
+## Examples
+
+``` r
+fit <- readRDS(system.file('examples', 'fit.RDS', package='adnuts'))
+#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
+#> Error in gzfile(file, "rb"): cannot open the connection
+pairs(fit)
+#> Error: object 'fit' not found
+pairs(fit, pars=1:2)
+#> Error: object 'fit' not found
+pairs(fit, pars=c(2,1))
+#> Error: object 'fit' not found
+pairs(fit, pars=c('b', 'a'))
+#> Error: object 'fit' not found
+pairs(fit, pars=1:2, order='slow')
+#> Error: object 'fit' not found
+pairs(fit, pars=1:2, order='fast')
+#> Error: object 'fit' not found
+pairs(fit, pars=1:2, order='mismatch')
+#> Error: object 'fit' not found
+```

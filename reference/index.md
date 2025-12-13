@@ -14,6 +14,9 @@
 - [`benchmark_metrics()`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/benchmark_metrics.md)
   : Calculate gradient timings on a model for different metrics
 
+- [`check_snuts_diagnostics()`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/check_snuts_diagnostics.md)
+  : Check NUTS diagnostics of a fitted model
+
 - [`.check_console_printing()`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/dot-check_console_printing.md)
   : Check if the session is interactive or Rstudio which has
   implications for parallel output
@@ -88,9 +91,6 @@
 
 - [`sample_snuts()`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/sample_snuts.md)
   : NUTS sampling for TMB models using a sparse metric (BETA).
-
-- [`sample_sparse_tmb()`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/sample_sparse_tmb.md)
-  : Deprecated version of sample_snuts
 
 - [`snutsfit()`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/snutsfit.md)
   : Constructor for the "snutsfit" (A-D fit) class

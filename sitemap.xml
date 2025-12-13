@@ -6,9 +6,11 @@
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/articles/index.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/authors.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/index.html</loc></url>
+<url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/SparseNUTS-package.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/as.data.frame.snutsfit.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/as.tmbfit.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/benchmark_metrics.html</loc></url>
+<url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/check_snuts_diagnostics.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/dot-check_console_printing.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/dot-get_Q.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/dot-get_Qinv.html</loc></url>
@@ -33,7 +35,6 @@
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/print.snutsfit.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/sample_inits.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/sample_snuts.html</loc></url>
-<url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/sample_sparse_tmb.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/snutsfit.html</loc></url>
 <url><loc>https://cole-monnahan-noaa.github.io/SparseNUTS/reference/summary.snutsfit.html</loc></url>
 </urlset>

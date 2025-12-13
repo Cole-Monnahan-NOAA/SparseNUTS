@@ -1,0 +1,78 @@
+# SparseNUTS: Sparse no-U-turn MCMC sampling for TMB and RTMB models
+
+Draw Bayesian posterior samples from a TMB model using the sparse
+no-U-turn MCMC sampler (SNUTS).
+
+## Details
+
+The software package Stan pioneered the use of no-U-turn (NUTS) sampling
+for Bayesian models (Hoffman and Gelman 2014, Carpenter et al. 2017).
+This algorithm provides fast, efficient sampling across a wide range of
+models, including hierarchical ones, and thus can be used as a generic
+modeling tool (Monnahan et al. 2017). One major limitation of Stan's
+implementation is that it can be slow for models with high correlations.
+The SNUTS algorithm solves this by decorrelating the posterior using
+TMB's sparse joint precision matrix (Monnahan et al. in prep). Thus the
+Stan NUTS algorithm is much more efficient because it samples from a
+posterior with approximately no linear correlations.
+
+The SparseNUTS R package provides an R workflow for NUTS sampling for
+TMB and RTMB models (Kristensen et al. 2016) via the StanEstimators
+interface, including heuristic algorithms to automatically select the
+metric and length of warmup. It allows parallel execution, and links to
+diagnostic and inference tools provided by monitor and shinystan. More
+details can be found in the package vignette.
+
+Note that SparseNUTS is closely related to adnuts, and provides extended
+functionality to the tmbstan (Monnahan and Kristensen 2018).
+
+## References
+
+Carpenter, B., Gelman, A., Hoffman, M.D., Lee, D., Goodrich, B.,
+Betancourt, M., Riddell, A., Guo, J.Q., Li, P., Riddell, A., 2017. Stan:
+A Probabilistic Programming Language. J Stat Softw. 76:1-29.
+
+Hoffman, M.D., Gelman, A., 2014. The no-U-turn sampler: adaptively
+setting path lengths in Hamiltonian Monte Carlo. J Mach Learn Res.
+15:1593-1623.
+
+Kristensen, K., Nielsen, A., Berg, C.W., Skaug, H., Bell, B.M., 2016.
+TMB: Automatic differentiation and Laplace approximation. J Stat Softw.
+70:21.
+
+Kristensen, K., 2017. TMB: General random effect model builder tool
+inspired by ADMB. R package version 1.7.11.
+
+Monnahan, C.C., Thorson, J.T., Branch, T.A., 2017. Faster estimation of
+Bayesian models in ecology using Hamiltonian Monte Carlo. Methods in
+Ecology and Evolution. 8:339-348.
+
+Monnahan C.C., Kristensen K. (2018). No-U-turn sampling for fast
+Bayesian inference in ADMB and TMB: Introducing the adnuts and tmbstan R
+packages PLoS ONE 13(5): e0197954.
+https://doi.org/10.1371/journal.pone.0197954
+
+Monnahan, C.C., Thorson, J.T., Kristensen, K., Carpenter, B. (in prep).
+Leveraging sparsity to improve no-U-turn sampling efficiency for
+hierarchical Bayesian models.
+
+Stan Development Team, 2016. Stan modeling language users guide and
+reference manual, version 2.11.0.
+
+Stan Development Team, 2016. RStan: The R interface to Stan. R package
+version 2.14.1. http://mc-stan.org.
+
+## See also
+
+Useful links:
+
+- <https://Cole-Monnahan-NOAA.github.io/SparseNUTS>
+
+- <https://cole-monnahan-noaa.github.io/SparseNUTS/>
+
+- Report bugs at
+  <https://github.com/Cole-Monnahan-NOAA/SparseNUTS/issues>
+
+## Author
+
+**Maintainer**: First Last <first.last@example.com>

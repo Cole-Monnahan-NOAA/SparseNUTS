@@ -90,20 +90,18 @@ sample_snuts(
 
 - init:
 
-  Either 'last.par.best' (default), 'random', 'random-t', or 'unif'. The
-  former starts from the joint mode, while 'random' and 'random-t' draw
-  from multivariate normal or multivariate t with 2 degrees of freedom
+  Either 'last.par.best' (default), 'random', 'random-t', 'unif', or a
+  list of vectors equal to the number of chains used. The former starts
+  from the joint mode, while 'random' and 'random-t' draw from
+  multivariate normal or multivariate t with 2 degrees of freedom
   distributions using the inverse joint precision matrix as a covariance
   matrix. 'random-t' is provided to allow for more dispersed initial
   values. 'unif' will draw U(-2,2) samples for all parameters, similar
-  ot Stan's default behavior. If the joint NLL is undefined at the
+  to Stan's default behavior. If the joint NLL is undefined at the
   initial values then the model will exit and return the initial vector
-  for further investigation by the user, if desired. Note that
-  [`stan_sample`](https://andrjohns.github.io/StanEstimators/reference/stan_sample.html)
-  only allows for the same init vector for all chains currently. If a
-  seed is specified it will be set and thus the inits used will be
-  reproducible. The inits are also returned in the 'inits' slot of the
-  fitted object.
+  for further investigation by the user, if desired. If a seed is
+  specified it will be set and thus the inits used will be reproducible.
+  The inits are also returned in the 'inits' slot of the fitted object.
 
 - metric:
 

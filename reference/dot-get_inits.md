@@ -5,7 +5,7 @@ Get a single initial value vector in untransformed model space
 ## Usage
 
 ``` r
-.get_inits(init, obj2, seed, inputs)
+.get_inits(init, obj2, inputs)
 ```
 
 ## Arguments
@@ -17,10 +17,6 @@ Get a single initial value vector in untransformed model space
 - obj2:
 
   The joint TMB model
-
-- seed:
-
-  RNG seed
 
 - inputs:
 
