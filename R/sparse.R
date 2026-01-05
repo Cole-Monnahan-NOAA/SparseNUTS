@@ -536,7 +536,7 @@ benchmark_metrics <- function(obj, times=1000, metrics=NULL,
     M <- solve(as.matrix(Q))
   } else {
     M <- .get_Qinv(obj)
-    Q <- NULL
+    Q <- solve(M)
   }
   n <- length(obj$env$last.par.best)
   res <- lapply(metrics, function(metric) {
