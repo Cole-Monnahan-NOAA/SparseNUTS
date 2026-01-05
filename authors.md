@@ -9,14 +9,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/Cole-Monnahan-NOAA/SparseNUTS/blob/main/DESCRIPTION)
 
-Last F (2025). *SparseNUTS: Sparse No-U-Turn MCMC Sampling for 'Template
+Last F (2026). *SparseNUTS: Sparse No-U-Turn MCMC Sampling for 'Template
 Model Builder'*. R package version 0.0.0.9000,
 <https://Cole-Monnahan-NOAA.github.io/SparseNUTS>.
 
     @Manual{,
       title = {SparseNUTS: Sparse No-U-Turn MCMC Sampling for 'Template Model Builder'},
       author = {First Last},
-      year = {2025},
+      year = {2026},
       note = {R package version 0.0.0.9000},
       url = {https://Cole-Monnahan-NOAA.github.io/SparseNUTS},
     }
