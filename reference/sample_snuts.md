@@ -164,7 +164,7 @@ sample_snuts(
   Stan defaults, but when using dense, sparse, or diag metrics a much
   shorter warmup can be used (e.g., 150), especially if paired with a
   'unit_e' Stan metric. Use
-  [`plot_sampler_params`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/plot_sampler_params.md)
+  [`plot_sampler_params`](https://noaa-afsc.github.io/SparseNUTS/reference/plot_sampler_params.md)
   to investigate warmup performance and adjust as necessary for
   subsequent runs.
 

@@ -2,21 +2,21 @@
 
 ## Authors
 
-- **First Last**. Author, maintainer.
+- **Cole Monnahan**. Author, maintainer.
 
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/Cole-Monnahan-NOAA/SparseNUTS/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/noaa-afsc/SparseNUTS/blob/main/DESCRIPTION)
 
-Last F (2026). *SparseNUTS: Sparse No-U-Turn MCMC Sampling for 'Template
-Model Builder'*. R package version 0.0.0.9000,
-<https://Cole-Monnahan-NOAA.github.io/SparseNUTS>.
+Monnahan C (2026). *SparseNUTS: Sparse No-U-Turn MCMC Sampling for
+'Template Model Builder'*. R package version 0.0.0.9000,
+<https://noaa-afsc.github.io/SparseNUTS>.
 
     @Manual{,
       title = {SparseNUTS: Sparse No-U-Turn MCMC Sampling for 'Template Model Builder'},
-      author = {First Last},
+      author = {Cole Monnahan},
       year = {2026},
       note = {R package version 0.0.0.9000},
-      url = {https://Cole-Monnahan-NOAA.github.io/SparseNUTS},
+      url = {https://noaa-afsc.github.io/SparseNUTS},
     }

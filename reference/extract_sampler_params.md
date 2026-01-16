@@ -32,7 +32,7 @@ trajectory: stepsize, acceptance ratio, treedepth, and number of
 leapfrog steps. This function extracts these into a data.frame, which
 may be useful for diagnosing issues in certain cases. In general, the
 user should not need to examine them, or preferably should via
-[`plot_sampler_params`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/plot_sampler_params.md)
+[`plot_sampler_params`](https://noaa-afsc.github.io/SparseNUTS/reference/plot_sampler_params.md)
 or `launch_shinyadmb`.
 
 ## See also

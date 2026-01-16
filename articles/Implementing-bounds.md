@@ -1,0 +1,29 @@
+# Implementing parameter transformations in SNUTS
+
+``` r
+library(SparseNUTS)
+library(RTMB)
+```
+
+One major difference with the Stan langauge is that SNUTS does not
+natively handle parameter transformations such as box constraints.
+Instead, the analyst must do this manually in the model code, and
+include a Jacobian manually as well. `StanEstimator::stan_sample` has
+arguments for lower and upper bounds of parameters, but this
+functionality is not compatible with SNUTS because the decorrelation
+happens prior to applying the transformations. In other words, the
+bounds would be meaningless because the parameters they are associated
+with are decorrelated.
+
+This article demonstrates how to implement parameter transformations in
+RTMB for strictly positive parameters (e.g., variances) as well as a box
+constraint with a lower and upper bound (e.g., a probability).
+
+<https://mc-stan.org/docs/stan-users-guide/reparameterization.html#change-of-variables-vs.-transformations>
+“A transformation samples a parameter, then transforms it, whereas a
+change of variables transforms a parameter, then samples it. Only the
+latter requires a Jacobian adjustment.”
+
+<https://mc-stan.org/docs/reference-manual/transforms.html#absolute-derivative-of-the-lower-and-upper-bounds-inverse-transform>
+
+<https://mc-stan.org/docs/reference-manual/transforms.html#absolute-derivative-of-the-lower-and-upper-bounds-inverse-transform>

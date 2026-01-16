@@ -1,7 +1,7 @@
-# Convert object of class snutsfit to data.frame. Calls [`extract_samples`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/extract_samples.md)
+# Convert object of class snutsfit to data.frame. Calls [`extract_samples`](https://noaa-afsc.github.io/SparseNUTS/reference/extract_samples.md)
 
 Convert object of class snutsfit to data.frame. Calls
-[`extract_samples`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/extract_samples.md)
+[`extract_samples`](https://noaa-afsc.github.io/SparseNUTS/reference/extract_samples.md)
 
 ## Usage
 
@@ -35,6 +35,6 @@ A data frame with parameters as columns and samples as rows.
 ## Details
 
 This calls the default settings of
-[`extract_samples`](https://cole-monnahan-noaa.github.io/SparseNUTS/reference/extract_samples.md),
+[`extract_samples`](https://noaa-afsc.github.io/SparseNUTS/reference/extract_samples.md),
 no warmup samples and no column for the log-posterior (lp\_\_). Use this
 function directly for finer control.
