@@ -66,13 +66,10 @@ version 2.14.1. http://mc-stan.org.
 
 Useful links:
 
-- <https://Cole-Monnahan-NOAA.github.io/SparseNUTS>
+- <https://noaa-afsc.github.io/SparseNUTS>
 
-- <https://cole-monnahan-noaa.github.io/SparseNUTS/>
-
-- Report bugs at
-  <https://github.com/Cole-Monnahan-NOAA/SparseNUTS/issues>
+- Report bugs at <https://github.com/noaa-afsc/SparseNUTS/issues>
 
 ## Author
 
-**Maintainer**: First Last <first.last@example.com>
+**Maintainer**: Cole Monnahan <cole.monnahan@noaa.gov>

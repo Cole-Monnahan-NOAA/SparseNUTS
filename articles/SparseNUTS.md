@@ -128,21 +128,21 @@ fit <- sample_snuts(obj, refresh=0, seed=1,
 
     ## 
     ## 
-    ## Gradient evaluation took 6.7e-05 seconds
-    ## 1000 transitions using 10 leapfrog steps per transition would take 0.67 seconds.
+    ## Gradient evaluation took 8.9e-05 seconds
+    ## 1000 transitions using 10 leapfrog steps per transition would take 0.89 seconds.
     ## Adjust your expectations accordingly!
     ## 
     ## 
     ## 
-    ##  Elapsed Time: 0.096 seconds (Warm-up)
-    ##                0.573 seconds (Sampling)
-    ##                0.669 seconds (Total)
+    ##  Elapsed Time: 0.097 seconds (Warm-up)
+    ##                0.585 seconds (Sampling)
+    ##                0.682 seconds (Total)
     ## 
     ## 
     ## 
     ## Model 'schools' has 10 pars, and was fit using NUTS with a 'diag' metric
     ## 1 chain(s) of 1150 total iterations (150 warmup) were used
-    ## Average run time per chain was 0.67 seconds 
+    ## Average run time per chain was 0.68 seconds 
     ## Minimum ESS=228.2 (22.82%), and maximum Rhat=1.007
     ## There were 0 divergences after warmup
 
@@ -218,7 +218,7 @@ print(fit)
 
     ## Model 'schools' has 10 pars, and was fit using NUTS with a 'diag' metric
     ## 1 chain(s) of 1150 total iterations (150 warmup) were used
-    ## Average run time per chain was 0.67 seconds 
+    ## Average run time per chain was 0.68 seconds 
     ## Minimum ESS=228.2 (22.82%), and maximum Rhat=1.007
     ## There were 0 divergences after warmup
 
