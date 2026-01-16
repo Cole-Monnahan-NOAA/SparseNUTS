@@ -2,13 +2,12 @@ Package: SparseNUTS
 Title: Sparse No-U-Turn MCMC Sampling for 'Template Model Builder'
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+    person("Cole", "Monnahan", , "cole.monnahan@noaa.gov", role = c("aut", "cre"))
 Description: Bayesian inference powered by the sparse no-U-turn (SNUTS) algorithm by 
- Monnahan et al. (in prep). SNUTS is implemented for 'Template Model Builder' ('TMB') models via the 'StanEstimators' interface, which improves sampling efficiency by decorrelating the posterior via a sparse metric prior to sampling. 'AD Model Builder' ('ADMB') models are also supported and have functionality is similar to 'Stan'. The 'rstan' and 'shinystan' packages are used for diagnostics and inference.
-URL: https://Cole-Monnahan-NOAA.github.io/SparseNUTS, https://cole-monnahan-noaa.github.io/SparseNUTS/
-BugReports: https://github.com/Cole-Monnahan-NOAA/SparseNUTS/issues
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+ Monnahan et al. (in prep). SNUTS is implemented for 'Template Model Builder' ('TMB') models via the 'StanEstimators' interface, which improves sampling efficiency by decorrelating the posterior via a sparse metric prior to sampling. 
+URL: https://noaa-afsc.github.io/SparseNUTS
+BugReports: https://github.com/noaa-afsc/SparseNUTS/issues
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3

@@ -1,5 +1,5 @@
 tests/testthat/*.pdf
-
+docs/*
 
 # History files
 .Rhistory
