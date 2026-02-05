@@ -62,14 +62,12 @@
 #' version 2.14.1. http://mc-stan.org.
 #' @keywords internal
 "_PACKAGE"
-# #' @import snowfall
 #' @importFrom stats rnorm runif cov acf cor dnorm qnorm sd
 # #' @importFrom utils read.csv read.table write.table
 #' @importFrom grDevices gray rgb
 #' @importFrom graphics axis box hist legend lines mtext par plot
 #'   points text abline
 #' @importFrom ellipse ellipse
-# #' @importFrom rstan monitor
 #' @importFrom posterior summarize_draws
 #' @importFrom ggplot2 ggplot aes geom_point theme_bw facet_wrap
 #' @importFrom methods as is

@@ -8,14 +8,14 @@ SparseNUTS}
 sample_inits(fit, chains)
 }
 \arguments{
-\item{fit}{An outputted list from \code{\link{sample_admb}}}
+\item{fit}{A fitted object from \code{\link{sample_snuts}}}
 
 \item{chains}{The number of chains for the subsequent run, which
 determines the number to return.}
 }
 \value{
-A list of lists which can be passed back into
-\code{\link{sample_admb}}.
+A list of vectors which can be passed back into
+\code{\link{sample_snuts}}.
 }
 \description{
 Function to generate random initial values from a previous fit using

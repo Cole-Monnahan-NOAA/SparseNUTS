@@ -13,7 +13,7 @@ extract_samples(
 )
 }
 \arguments{
-\item{fit}{A list returned by \code{sample_admb}.}
+\item{fit}{A list returned by \code{sample_snuts}.}
 
 \item{inc_warmup}{Whether to extract the warmup samples or not
 (default). Warmup samples should never be used for inference, but may
@@ -26,9 +26,7 @@ be useful for diagnostics.}
 chain). This could then be converted to a CODA mcmc object.}
 
 \item{unbounded}{Boolean flag whether to return samples in
-unbounded (untransformed) space. Will only be differences
-when init_bounded types are used in the ADMB template. This
-can be useful for model debugging.}
+unbounded (untransformed) space. This can be useful for model debugging.}
 }
 \value{
 If as.list is FALSE, an invisible data.frame containing samples
@@ -50,7 +48,7 @@ samples are not valid and should never be used for inference, but may
 be useful in some cases for diagnosing issues.
 }
 \examples{
-## A previously run fitted ADMB model
+## A previously run fitted TMB model
 fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
 post <- extract_samples(fit)
 tail(apply(post, 2, median))

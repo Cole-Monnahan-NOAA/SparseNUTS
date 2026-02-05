@@ -40,6 +40,6 @@ if(!skip_RTMB){
   fit <- sample_snuts(obj, num_samples=400, num_warmup=100,
                       chains=2, cores=1, init='random-t',
                       seed=121414)
-  #saveRDS(object=fit, file='tests/testthat/fit_snuts.RDS')
+#  saveRDS(object=fit, file='tests/testthat/fit_snuts.RDS')
 
 }

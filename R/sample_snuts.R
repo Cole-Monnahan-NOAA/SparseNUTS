@@ -82,7 +82,7 @@
 #'   runs.
 #' @param ... Additional arguments to pass to
 #'   \code{\link{StanEstimators::stan_sample}}.
-#' @return A fitted MCMC object of class 'snutsfit'
+#' @return A fitted MCMC object of class 'tmbfit'
 #'
 #' @details
 #' The \strong{TMB metric} is used to decorrelate and descale the posterior

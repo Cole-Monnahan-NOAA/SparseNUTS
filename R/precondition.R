@@ -3,136 +3,6 @@
 ## https://github.com/Cole-Monnahan-NOAA/adnuts/commit/33744b850b8ee0642b8c8095181ebb4b878e1495
 
 
-#' Extract posterior samples from a tmbfit object
-#' @param x A fitted tmbfit object
-#' @param invf The inverse function to decorrelate the parameters
-#' @param parnames A vector of parameter names, excluding lp__
-#' @param array Whether to return a data.frame (default) or array
-#'   which is used in constructing other objects downstream
-#' @export
-get_post <- function(x, invf, parnames, array=FALSE) {
-  p <- x@draws |> as.data.frame()
-  #q <- subset(p, select=-c(lp__, .iteration, .draw, .chain))
-  q <- p[, which(!names(p) %in% c('lp__', '.iteration', '.draw', '.chain')), drop=FALSE]
-  names(q) <- parnames
-  if(ncol(q)==1){
-    q <- as.data.frame(apply(q, 1, invf)) |> cbind(p$lp__)
-  } else {
-    q <- as.data.frame(t(apply(q, 1, invf))) |> cbind(p$lp__)
-  }
-  colnames(q) <- c(parnames, 'lp__')
-  ## build array
-  if(array){
-    samples <- array(NA, dim=c(max(p$.iter), max(p$.chain), 1 + length(parnames)),
-                     dimnames = list(NULL, NULL, c(parnames, "lp__")))
-    for(chain in 1:max(p$.chain))
-      samples[,chain,] <- as.matrix(q[p$.chain==chain,])
-    return(samples)
-  }
-  return(q)
-}
-
-
-#' Construtor for tmbfit objects
-#' @param x A fitted MCMC object
-#' @param parnames A character vector of unique par names
-#' @param mle A list of MLE parameters
-#' @param invf The inverse function for the parameters
-#' @param metric The metric used
-#' @param model A character giving the model name
-#' @export
-as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
-  ## prepare objects to use the pairs_admb function
-  post <- get_post(x, invf, parnames=parnames, array=TRUE)
-  sp <- as.data.frame(x@diagnostics)
-  spl <- list()
-  for(chain in 1:max(sp$.chain)){
-    spl[[chain]] <- as.matrix(sp[sp$.chain==chain,1:6])
-  }
-  timing <- sapply(x@timing, function(x) unlist(x))
-  thin <- as.numeric(x@metadata$thin)
-  warmup <- ceiling(as.numeric(x@metadata$num_warmup)/thin)
-  iter <- ceiling(as.numeric(x@metadata$num_samples)/thin)
-    if(dim(post)[1] != warmup + iter){
-    stop("Error in output dimensions: iter=",iter, "; warmup=", warmup,
-         "; nrow(post)=", nrow(post))
-    }
-  # make sure to call monitor *after* back-transforming the
-  # parameters into the original, correlated space
-  # mon <- cbind(variable=c(parnames, 'lp__'),
-  #              rstan::monitor(post, warmup = warmup, print=FALSE))
-  mon <- posterior::summarise_draws(post[-(1:warmup),,])
-  x <- list(samples=post, sampler_params=spl, mle=mle,
-            monitor=mon, model=model,
-            metric=metric,
-            par_names=parnames,
-            max_treedepth=x@metadata$max_depth,
-            warmup=warmup, iter=iter, thin=thin,
-            time.warmup=timing[1,],
-            time.sampling=timing[2,],
-            time.total=timing[1,]+timing[2,],
-            ## iter=as.numeric(x@metadata$num_samples)+as.numeric(x@metadata$num_warmup),
-            algorithm='NUTS')
-  snutsfit(x)
-}
-
-#' Print matrix stats
-#'
-#' @param x matrix object
-#'
-.print.mat.stats <- function(x){
-  if(is.null(x)) return(NULL)
-  if(NROW(x)==1) return(NULL) # not a matrix!
-  nm <- deparse(substitute(x))
-  e <- eigen(x,TRUE)
-  mine <- min(e$value); maxe <- max(e$value); ratio <- maxe/mine
-  pct.sparsity <- round(100*mean(x[lower.tri(x)] == 0),2)
-  message(nm, " is ", pct.sparsity,
-          "% zeroes, with condition factor=",round(ratio,0),
-          ' (min=',round(mine,3), ', max=', round(maxe,1),")")
-}
-
-#' Get the joint precision matrix Q from an optimized TMB or RTMB obj.
-#'
-#' @param obj An optimized TMB or RTMB object
-#' @return A sparse matrix Q
-#'
-.get_Q <- function(obj){
-  isRTMB <- ifelse(obj$env$DLL=='RTMB', TRUE, FALSE)
-  if(length(obj$env$random)==0){
-    warning("Q not available for models without random effects")
-    return(NULL)
-  }
-  if(isRTMB){
-    Q <- RTMB::sdreport(obj, getJointPrecision=TRUE,                                              skip.delta.method=TRUE)$jointPrecision
-  } else {
-    Q <- TMB::sdreport(obj, getJointPrecision=TRUE,
-                       skip.delta.method=TRUE)$jointPrecision
-  }
-  return(Q)
-}
-
-#' Get the joint covariance Sigma from an optimized TMB or RTMB
-#' obj without random effects.
-#'
-#' @param obj An optimized TMB or RTMB object
-#' @return A dense matrix Sigma
-#'
-.get_Qinv <- function(obj){
-  isRTMB <- ifelse(obj$env$DLL=='RTMB', TRUE, FALSE)
-  # breaks w/ Laplace turned on so need to catch it before use
-  # if(length(obj$env$random)>0){
-  #   warning("Qinv does not make sense for models with random effects")
-  #   return(NULL)
-  # }
-  if(isRTMB){
-    Qinv <- RTMB::sdreport(obj, skip.delta.method=TRUE)$cov.fixed
-  } else {
-    Qinv <- TMB::sdreport(obj, skip.delta.method=TRUE)$cov.fixed
-  }
-  return(Qinv)
-}
-
 
 #' Prepare inputs for sparse sampling
 #'
@@ -210,7 +80,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
   ses <- suppressWarnings(sqrt(diag(Qinv)))
   mycor <- suppressWarnings(stats::cov2cor(Qinv))
 
-    if(!all(is.finite(ses))){
+  if(!all(is.finite(ses))){
     if(metric %in% c('unit', 'auto')){
       warning("Some standard errors estimated to be NaN, filling with dummy values so unit metric works. The 'mle' slot will be wrong so do not use it")
       cor <- diag(length(mle))
@@ -218,14 +88,14 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     } else {
       stop("Some standard errors estimated to be NaN, use 'unit' metric for models without a mode or positive definite Hessian")
     }
-    }
+  }
   names(mle) <- parnames
   mle <- list(nopar=length(mle), est=mle, se=ses,
               cor=mycor, Q=Q)#,              Qinv=Qinv)
- out <- list(Q=Q, Qinv=Qinv, mle=mle, time.opt=time.opt,
-             time.Qinv=time.Qinv, time.Q=time.Q, parnames=parnames,
-             laplace=laplace, metric=metric)
- return(out)
+  out <- list(Q=Q, Qinv=Qinv, mle=mle, time.opt=time.opt,
+              time.Qinv=time.Qinv, time.Q=time.Q, parnames=parnames,
+              laplace=laplace, metric=metric)
+  return(out)
 }
 
 
@@ -253,10 +123,10 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
   for(ii in 1:10){
     inits <-
       switch(init,
-      'last.par.best' = lpb,
-      'random-t'      = inputs$mle$est + mvtnorm::rmvt(n=1, sigma=inputs$Qinv, df=2),
-      'random'        = inputs$mle$est + mvtnorm::rmvnorm(n=1, sigma=inputs$Qinv),
-      'unif'          = runif(n=npars, min=-2, max=2))
+             'last.par.best' = lpb,
+             'random-t'      = inputs$mle$est + mvtnorm::rmvt(n=1, sigma=inputs$Qinv, df=2),
+             'random'        = inputs$mle$est + mvtnorm::rmvnorm(n=1, sigma=inputs$Qinv),
+             'unif'          = runif(n=npars, min=-2, max=2))
     inits <- as.numeric(inits)
     if(length(inits)!=npars)
       stop("Wrong vector length for inits:", length(inits), " when should be", npars)
@@ -275,6 +145,8 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     stop(init, " inits resulted in NaN log-posterior after 10 tries, try another method or investigate model")
   return(inits)
 }
+
+
 
 
 #' Update algorithm for mass matrix.
@@ -328,7 +200,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
     # This metric is carefully constructured to match the dense
     # metric up to numerical precision. But as it is slower it is
     # not typically used.
-   # stopifnot(require(Matrix))
+    # stopifnot(require(Matrix))
     if(!is(Q,"Matrix")) stop("Q is not a Matrix object, something went wrong")
     # M is actually Q, i.e., the inverse-mass
     # Antidiagonal matrix JJ = I
@@ -440,7 +312,7 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
             rdense$gr2(rdense$x.cur[[1]]+rnorm(npars, sd=1e-10)),
             rsparse$gr2(rsparse$x.cur[[1]]+rnorm(npars, sd=1e-10)),
             times = 500
-            )
+          )
           tdense <- summary(bench)$median[1]
           tsparse <- summary(bench)$median[2]
           if(tdense < tsparse){
@@ -464,95 +336,3 @@ as.tmbfit <- function(x, parnames, mle, invf, metric, model='anonymous'){
   return(list(gr2=gr2, fn2=fn2, finv=finv, x.cur=x.cur, chd=chd, J=J, metric=metric))
 }
 
-
-
-
-
-
-#' Make an image plot showing the correlation (lower triangle)
-#' and sparsity (upper triangle).
-#'
-#' @param fit A fitted object
-#' @param Q A sparse matrix. If NULL it will be extracted from
-#'   \code{fit}.
-#'
-#' @details This function is used to visualize the sparsity and
-#'   correlation patterns of the joint model. The upper triangle
-#'   shows whether an element is 0 (white) or not (gray), while
-#'   the lower triangle shows the correlation calculated from
-#'   \code{cov2cor(solve(Q))}.
-#' @return A plot created by \code{Matrix::image}.
-#' @export
-plot_Q <- function(fit, Q=NULL){
-  if(is.null(Q)){
-    if(!is.snutsfit(fit)) stop("fit is not a valid fitted object")
-    if(is.null(fit$mle$Q)) return(NULL)
-    nn <- length(fit$par_names)
-    if(is.null(fit$mle$Qinv)){
-      corr <- stats::cov2cor(as.matrix(Matrix::solve(fit$mle$Q)))
-    } else {
-      corr <- stats::cov2cor(fit$mle$Qinv)
-    }
-    Q <- fit$mle$Q
-  } else {
-    corr <- stats::cov2cor(solve(Q))
-  }
-  Q[Q!=0] <- 1e-10
-  Q[lower.tri(Q,TRUE)] <- corr[lower.tri(Q,TRUE)]
-  Matrix::image(Q, useRaster=TRUE, at=seq(-1,1, len=50))
-}
-
-
-#' Calculate gradient timings on a model for different metrics
-#'
-#' @param obj A TMB object
-#' @param metrics A character vector of different metrics to benchmark
-#' @param times How many evaluations to do
-#' @param model_name An optional character name for the model, if
-#'   NULL will pull from the DLL name
-#' @export
-#' @return A data.frame containing the median gradient timing
-#'   (time), the percent sparsity of \eqn{Q} and the dimension of
-#'   the model (npar).
-#'
-benchmark_metrics <- function(obj, times=1000, metrics=NULL,
-                              model_name=NULL){
-  if(!requireNamespace(package='microbenchmark', quietly=TRUE))
-    stop("The microbenchmark package is required for this function")
-  hasRE <- length(obj$env$random)>0
-  if(is.null(metrics)){
-    metrics <- c('unit', 'diag', 'dense', 'sparse')
-    # if no RE, sparse won't work
-    if(!hasRE)  metrics <- c('unit', 'diag', 'dense')
-  }
-  if(!hasRE & any(c('sparse', 'sparse-naive') %in% metrics))
-    stop('sparse metric not allowed for models without random effects')
-  if(is.null(model_name)) model_name <- obj$env$DLL
-  message("optimizing model ", model_name, "...")
-  obj$env$beSilent()
-  opt <- with(obj, nlminb(par, fn, gr))
-  if(hasRE){
-    Q <- .get_Q(obj)
-    M <- solve(as.matrix(Q))
-  } else {
-    M <- .get_Qinv(obj)
-    Q <- solve(M)
-  }
-  n <- length(obj$env$last.par.best)
-  res <- lapply(metrics, function(metric) {
-    out <- sample_snuts(obj, rotation_only = TRUE,
-                        metric=metric, Q=Q, Qinv=M,
-                        skip_optimization = TRUE)
-    metric <- out$metric # in case auto
-    x0 <- out$x.cur[[1]]
-    # make sure to add tiny random component during benchmarking to
-    # avoid TMB tricks of skipping calcs
-    time <- summary(microbenchmark::microbenchmark(out$gr2(x0+rnorm(n, sd=1e-10)),
-                                   unit='ms', times=times))$median
-    return(data.frame(model=model_name, metric=metric, time=time))
-  })
-  res <- do.call(rbind, res) |>
-    cbind(pct.sparsity=round(100*mean(Q[lower.tri(Q)] == 0),2)) |>
-    cbind(npar=length(obj$env$last.par.best))
-  res
-}
