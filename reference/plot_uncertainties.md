@@ -12,7 +12,8 @@ plot_uncertainties(fit, log = TRUE, plot = TRUE)
 
 - fit:
 
-  A fitted object returned by `sample_admb`
+  A fitted object returned by
+  [`sample_snuts`](https://noaa-afsc.github.io/SparseNUTS/reference/sample_snuts.md)
 
 - log:
 
@@ -38,10 +39,12 @@ differences often indicate issues with one estimation method.
 
 ``` r
 fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 x <- plot_uncertainties(fit, plot=FALSE)
-#> Error: object 'fit' not found
 head(x)
-#> Error: object 'x' not found
+#>             par   sd.post sd.mle
+#> x1           x1 0.9988344      1
+#> x2           x2 2.0190329      2
+#> x3           x3 2.9297466      3
+#> xvec[1] xvec[1] 1.0397279      1
+#> xvec[2] xvec[2] 1.0453499      1
 ```

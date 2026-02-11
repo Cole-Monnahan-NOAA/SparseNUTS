@@ -75,7 +75,9 @@ sample_snuts(
   'max_treedepth', and 'metric' which is the type of metric adaptation
   for Stan to do with options ('unit_e', 'diag_e', or 'dense_e'). For
   dense and sparse metrics this usually can be 'unit_e' to skip
-  adaptation. NULL values (default) revert to `stan_sample` defaults.
+  adaptation. NULL values (default) revert to
+  [`stan_sample`](https://andrjohns.github.io/StanEstimators/reference/stan_sample.html)
+  defaults.
 
 - seed:
 
@@ -171,11 +173,11 @@ sample_snuts(
 - ...:
 
   Additional arguments to pass to
-  [`StanEstimators::stan_sample`](https://andrjohns.github.io/StanEstimators/reference/stan_sample.html).
+  [`stan_sample`](https://andrjohns.github.io/StanEstimators/reference/stan_sample.html).
 
 ## Value
 
-A fitted MCMC object of class 'snutsfit'
+A fitted MCMC object of class 'tmbfit'
 
 ## Details
 

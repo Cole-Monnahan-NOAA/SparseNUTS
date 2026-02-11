@@ -19,7 +19,7 @@ extract_samples(
 
 - fit:
 
-  A list returned by `sample_admb`.
+  A list returned by `sample_snuts`.
 
 - inc_warmup:
 
@@ -39,8 +39,7 @@ extract_samples(
 - unbounded:
 
   Boolean flag whether to return samples in unbounded (untransformed)
-  space. Will only be differences when init_bounded types are used in
-  the ADMB template. This can be useful for model debugging.
+  space. This can be useful for model debugging.
 
 ## Value
 
@@ -55,19 +54,17 @@ This function is loosely based on the rstan function `extract`. Merging
 samples across chains should only be used for inference after
 appropriate diagnostic checks. Do not calculate diagnostics like Rhat or
 effective sample size after using this function, instead, use
-[`monitor`](https://mc-stan.org/rstan/reference/monitor.html). Likewise,
-warmup samples are not valid and should never be used for inference, but
-may be useful in some cases for diagnosing issues.
+[`summarize_draws`](https://mc-stan.org/posterior/reference/draws_summary.html).
+Likewise, warmup samples are not valid and should never be used for
+inference, but may be useful in some cases for diagnosing issues.
 
 ## Examples
 
 ``` r
-## A previously run fitted ADMB model
+## A previously run fitted TMB model
 fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 post <- extract_samples(fit)
-#> Error: object 'fit' not found
 tail(apply(post, 2, median))
-#> Error: object 'post' not found
+#>          x1          x2          x3     xvec[1]     xvec[2] 
+#>  0.03341737 -0.05535200  0.03685913 -0.01604522  0.02937307 
 ```

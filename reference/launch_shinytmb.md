@@ -12,8 +12,4 @@ launch_shinytmb(fit)
 
 - fit:
 
-  A named list returned by `sample_tmb`.
-
-## See also
-
-`launch_shinyadmb`
+  A named list returned by `sample_snuts`.

@@ -19,7 +19,8 @@ plot_marginals(
 
 - fit:
 
-  A fitted object returned by `sample_admb`.
+  A fitted object returned by
+  [`sample_snuts`](https://noaa-afsc.github.io/SparseNUTS/reference/sample_snuts.md).
 
 - pars:
 
@@ -67,8 +68,6 @@ readable file.
 
 ``` r
 fit <- readRDS(system.file('examples', 'fit.RDS', package='SparseNUTS'))
-#> Warning: cannot open compressed file '', probable reason 'No such file or directory'
-#> Error in gzfile(file, "rb"): cannot open the connection
 plot_marginals(fit, pars=1:2)
-#> Error: object 'fit' not found
+
 ```

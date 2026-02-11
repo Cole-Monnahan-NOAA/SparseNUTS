@@ -37,7 +37,7 @@ parameter"></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Plot MLE vs MCMC marginal standard deviations for each parameter</h1>
-      <small class="dont-index">Source: <a href="https://github.com/noaa-afsc/SparseNUTS/blob/main/R/utils.R" class="external-link"><code>R/utils.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/noaa-afsc/SparseNUTS/blob/main/R/plotting.R" class="external-link"><code>R/plotting.R</code></a></small>
       <div class="d-none name"><code>plot_uncertainties.Rd</code></div>
     </div>
 
@@ -57,7 +57,7 @@ parameter</p>
 
 <dl><dt id="arg-fit">fit<a class="anchor" aria-label="anchor" href="#arg-fit"></a></dt>
 <dd><p>A fitted object returned by
-<code>sample_admb</code></p></dd>
+<code><a href="sample_snuts.html">sample_snuts</a></code></p></dd>
 
 
 <dt id="arg-log">log<a class="anchor" aria-label="anchor" href="#arg-log"></a></dt>
@@ -85,12 +85,14 @@ indicate issues with one estimation method.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'examples'</span>, <span class="st">'fit.RDS'</span>, package<span class="op">=</span><span class="st">'SparseNUTS'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open compressed file '', probable reason 'No such file or directory'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gzfile(file, "rb"):</span> cannot open the connection</span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">plot_uncertainties</span><span class="op">(</span><span class="va">fit</span>, plot<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'fit' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'x' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             par   sd.post sd.mle</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x1           x1 0.9988344      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x2           x2 2.0190329      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x3           x3 2.9297466      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> xvec[1] xvec[1] 1.0397279      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> xvec[2] xvec[2] 1.0453499      1</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

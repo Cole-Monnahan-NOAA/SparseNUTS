@@ -2,11 +2,10 @@
 
 ## All functions
 
-- [`as.data.frame(`*`<snutsfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/as.data.frame.snutsfit.md)
+- [`as.data.frame(`*`<tmbfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/as.data.frame.tmbfit.md)
   :
 
-  Convert object of class snutsfit to data.frame. Calls
-  `extract_samples`
+  Convert object of class tmbfit to data.frame. Calls `extract_samples`
 
 - [`as.tmbfit()`](https://noaa-afsc.github.io/SparseNUTS/reference/as.tmbfit.md)
   : Construtor for tmbfit objects
@@ -16,10 +15,6 @@
 
 - [`check_snuts_diagnostics()`](https://noaa-afsc.github.io/SparseNUTS/reference/check_snuts_diagnostics.md)
   : Check NUTS diagnostics of a fitted model
-
-- [`.check_console_printing()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-check_console_printing.md)
-  : Check if the session is interactive or Rstudio which has
-  implications for parallel output
 
 - [`.get_Q()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-get_Q.md)
   : Get the joint precision matrix Q from an optimized TMB or RTMB obj.
@@ -31,9 +26,6 @@
 - [`.get_inits()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-get_inits.md)
   : Get a single initial value vector in untransformed model space
 
-- [`.get_inputs()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-get_inputs.md)
-  : Prepare inputs for sparse sampling
-
 - [`.make_unique_names()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-make_unique_names.md)
   : Function to take a character vector of parameter names and force
   them to be unique by appending numbers in square brackets as needed
@@ -42,9 +34,6 @@
   : Print matrix stats
 
 - [`.rotate_posterior()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-rotate_posterior.md)
-  : Update algorithm for mass matrix.
-
-- [`.rotate_space()`](https://noaa-afsc.github.io/SparseNUTS/reference/dot-rotate_space.md)
   : Update algorithm for mass matrix.
 
 - [`extract_sampler_params()`](https://noaa-afsc.github.io/SparseNUTS/reference/extract_sampler_params.md)
@@ -56,18 +45,18 @@
 - [`get_post()`](https://noaa-afsc.github.io/SparseNUTS/reference/get_post.md)
   : Extract posterior samples from a tmbfit object
 
-- [`is.snutsfit()`](https://noaa-afsc.github.io/SparseNUTS/reference/is.snutsfit.md)
-  : Check object of class snutsfit
+- [`is.tmbfit()`](https://noaa-afsc.github.io/SparseNUTS/reference/is.tmbfit.md)
+  : Check object of class tmbfit
 
 - [`launch_shinytmb()`](https://noaa-afsc.github.io/SparseNUTS/reference/launch_shinytmb.md)
   : Launch shinystan for a TMB fit.
 
-- [`pairs(`*`<snutsfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/pairs.snutsfit.md)
+- [`pairs(`*`<tmbfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/pairs.tmbfit.md)
   : Plot pairwise parameter posteriors and optionally the MLE points and
   confidence ellipses.
 
-- [`plot(`*`<snutsfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/plot.snutsfit.md)
-  : Plot object of class snutsfit
+- [`plot(`*`<tmbfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/plot.tmbfit.md)
+  : Plot object of class tmbfit
 
 - [`plot_Q()`](https://noaa-afsc.github.io/SparseNUTS/reference/plot_Q.md)
   : Make an image plot showing the correlation (lower triangle) and
@@ -82,8 +71,8 @@
 - [`plot_uncertainties()`](https://noaa-afsc.github.io/SparseNUTS/reference/plot_uncertainties.md)
   : Plot MLE vs MCMC marginal standard deviations for each parameter
 
-- [`print(`*`<snutsfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/print.snutsfit.md)
-  : Print summary of snutsfit object
+- [`print(`*`<tmbfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/print.tmbfit.md)
+  : Print summary of tmbfit object
 
 - [`sample_inits()`](https://noaa-afsc.github.io/SparseNUTS/reference/sample_inits.md)
   : Function to generate random initial values from a previous fit using
@@ -92,8 +81,8 @@
 - [`sample_snuts()`](https://noaa-afsc.github.io/SparseNUTS/reference/sample_snuts.md)
   : NUTS sampling for TMB models using a sparse metric (BETA).
 
-- [`snutsfit()`](https://noaa-afsc.github.io/SparseNUTS/reference/snutsfit.md)
-  : Constructor for the "snutsfit" (A-D fit) class
+- [`summary(`*`<tmbfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/summary.tmbfit.md)
+  : Print summary of object of class tmbfit
 
-- [`summary(`*`<snutsfit>`*`)`](https://noaa-afsc.github.io/SparseNUTS/reference/summary.snutsfit.md)
-  : Print summary of object of class snutsfit
+- [`tmbfit()`](https://noaa-afsc.github.io/SparseNUTS/reference/tmbfit.md)
+  : Constructor for the "tmbfit" class

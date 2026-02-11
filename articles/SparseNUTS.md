@@ -76,11 +76,6 @@ density.
 ``` r
 library(RTMB)
 library(SparseNUTS)
-```
-
-    ## Loading required package: StanEstimators
-
-``` r
 dat <- list(y=c(28,  8, -3,  7, -1,  1, 18, 12),
             sigma=c(15, 10, 16, 11,  9, 11, 10, 18))
 pars <- list(mu=0, logtau=0, eta=rep(1,8))
@@ -128,21 +123,21 @@ fit <- sample_snuts(obj, refresh=0, seed=1,
 
     ## 
     ## 
-    ## Gradient evaluation took 7.8e-05 seconds
-    ## 1000 transitions using 10 leapfrog steps per transition would take 0.78 seconds.
+    ## Gradient evaluation took 8.1e-05 seconds
+    ## 1000 transitions using 10 leapfrog steps per transition would take 0.81 seconds.
     ## Adjust your expectations accordingly!
     ## 
     ## 
     ## 
     ##  Elapsed Time: 0.096 seconds (Warm-up)
-    ##                0.557 seconds (Sampling)
-    ##                0.653 seconds (Total)
+    ##                0.598 seconds (Sampling)
+    ##                0.694 seconds (Total)
     ## 
     ## 
     ## 
     ## Model 'schools' has 10 pars, and was fit using NUTS with a 'diag' metric
     ## 1 chain(s) of 1150 total iterations (150 warmup) were used
-    ## Average run time per chain was 0.65 seconds 
+    ## Average run time per chain was 0.69 seconds 
     ## Minimum ESS=265.6 (26.56%), and maximum Rhat=1.003
     ## There were 0 divergences after warmup
 
@@ -218,7 +213,7 @@ print(fit)
 
     ## Model 'schools' has 10 pars, and was fit using NUTS with a 'diag' metric
     ## 1 chain(s) of 1150 total iterations (150 warmup) were used
-    ## Average run time per chain was 0.65 seconds 
+    ## Average run time per chain was 0.69 seconds 
     ## Minimum ESS=265.6 (26.56%), and maximum Rhat=1.003
     ## There were 0 divergences after warmup
 

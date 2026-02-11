@@ -62,7 +62,7 @@ into a single data.frame.</p>
 
 
 <dl><dt id="arg-fit">fit<a class="anchor" aria-label="anchor" href="#arg-fit"></a></dt>
-<dd><p>A list returned by <code>sample_admb</code>.</p></dd>
+<dd><p>A list returned by <code>sample_snuts</code>.</p></dd>
 
 
 <dt id="arg-inc-warmup">inc_warmup<a class="anchor" aria-label="anchor" href="#arg-inc-warmup"></a></dt>
@@ -83,9 +83,7 @@ chain). This could then be converted to a CODA mcmc object.</p></dd>
 
 <dt id="arg-unbounded">unbounded<a class="anchor" aria-label="anchor" href="#arg-unbounded"></a></dt>
 <dd><p>Boolean flag whether to return samples in
-unbounded (untransformed) space. Will only be differences
-when init_bounded types are used in the ADMB template. This
-can be useful for model debugging.</p></dd>
+unbounded (untransformed) space. This can be useful for model debugging.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -101,21 +99,19 @@ is TRUE, samples are returned as a list of matrices.</p>
 <code>extract</code>. Merging samples across chains should only be used for
 inference after appropriate diagnostic checks. Do not calculate
 diagnostics like Rhat or effective sample size after using this
-function, instead, use <code><a href="https://mc-stan.org/rstan/reference/monitor.html" class="external-link">monitor</a></code>. Likewise, warmup
+function, instead, use <code><a href="https://mc-stan.org/posterior/reference/draws_summary.html" class="external-link">summarize_draws</a></code>. Likewise, warmup
 samples are not valid and should never be used for inference, but may
 be useful in some cases for diagnosing issues.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## A previously run fitted ADMB model</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">## A previously run fitted TMB model</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">'examples'</span>, <span class="st">'fit.RDS'</span>, package<span class="op">=</span><span class="st">'SparseNUTS'</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>cannot open compressed file '', probable reason 'No such file or directory'</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in gzfile(file, "rb"):</span> cannot open the connection</span>
 <span class="r-in"><span><span class="va">post</span> <span class="op">&lt;-</span> <span class="fu">extract_samples</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'fit' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">post</span>, <span class="fl">2</span>, <span class="va">median</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'post' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          x1          x2          x3     xvec[1]     xvec[2] </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  0.03341737 -0.05535200  0.03685913 -0.01604522  0.02937307 </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

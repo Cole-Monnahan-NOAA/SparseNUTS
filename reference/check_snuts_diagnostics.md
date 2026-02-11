@@ -24,5 +24,5 @@ A data.frame containing diagnostic results (invisibly)
 
 ## Details
 
-This is a wrapper which calls the function
-`StanEstimators::check_hmc_diagnostics`
+This is a wrapper which calls the internal function
+`check_hmc_diagnostics`

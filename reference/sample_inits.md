@@ -13,7 +13,8 @@ sample_inits(fit, chains)
 
 - fit:
 
-  An outputted list from `sample_admb`
+  A fitted object from
+  [`sample_snuts`](https://noaa-afsc.github.io/SparseNUTS/reference/sample_snuts.md)
 
 - chains:
 
@@ -22,4 +23,5 @@ sample_inits(fit, chains)
 
 ## Value
 
-A list of lists which can be passed back into `sample_admb`.
+A list of vectors which can be passed back into
+[`sample_snuts`](https://noaa-afsc.github.io/SparseNUTS/reference/sample_snuts.md).

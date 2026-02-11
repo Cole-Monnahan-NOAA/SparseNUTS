@@ -21,8 +21,7 @@ plot_Q(fit, Q = NULL)
 
 ## Value
 
-A plot created by
-[`Matrix::image`](https://rdrr.io/r/graphics/image.html).
+A plot created by [`image`](https://rdrr.io/r/graphics/image.html).
 
 ## Details
 
